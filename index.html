@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Book Scoring Calculator</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+    }
+    label, select, input {
+      display: block;
+      margin: 10px 0;
+    }
+    #score {
+      margin-top: 20px;
+      font-weight: bold;
+      font-size: 1.2em;
+    }
+  </style>
+</head>
+<body>
+  <h1>📚 Book Scoring Calculator</h1>
+
+  <label for="age">Select Age Group:</label>
+  <select id="age">
+    <option value="Kids">Kids</option>
+    <option value="Youth">Youth</option>
+    <option value="Adults">Adults</option>
+  </select>
+
+  <label for="genre">Select Book Genre:</label>
+  <select id="genre"></select>
+
+  <label for="pages">Enter Page Count:</label>
+  <input type="number" id="pages" min="0" placeholder="e.g. 120">
+
+  <button onclick="calculateScore()">Get Score</button>
+
+  <div id="score"></div>
+
+  <script>
+    const data = {
+      Kids: {
+        "Picture Books": [5, 7, 10, 12, 15],
+        "Early Reader Books": [7, 10, 12, 15, 18],
+        "Chapter Books": [10, 12, 15, 18, 20],
+        "Advanced Chapter Books": [12, 15, 18, 20, 25],
+        "Graphic Novels / Comics": [10, 12, 15, 18, 20],
+        "Fantasy / Adventure": [10, 12, 15, 18, 25],
+        "Mystery / Thriller": [10, 12, 15, 18, 25],
+        "Science Fiction": [10, 12, 15, 18, 25],
+        "Non-Fiction / Educational Books": [12, 15, 20, 25, 30],
+        "Encyclopedias": [15, 20, 25, 30, 35],
+        "Self-Help": [20, 25, 30, 35, 40],
+        "Poetry": [10, 12, 15, 18, 25],
+        "Biographies / Memoirs": [12, 15, 20, 25, 30],
+      },
+      Youth: {
+        "Picture Books": [5, 7, 10, 12, 15],
+        "Graphic Novels / Comics": [7, 10, 15, 18, 20],
+        "Short Novels": [10, 12, 15, 18, 25],
+        "Regular Novels": [12, 15, 18, 20, 30],
+        "Long Novels": [15, 18, 20, 25, 35],
+        "Fantasy / Adventure": [12, 15, 20, 25, 30],
+        "Mystery / Thriller": [12, 15, 20, 25, 30],
+        "Science Fiction": [15, 20, 30, 35, 40],
+        "Self-Help": [20, 25, 30, 35, 40],
+        "Non-Fiction / Educational Books": [20, 25, 30, 40, 45],
+        "Encyclopedias": [20, 25, 30, 40, 50],
+        "Poetry": [15, 20, 25, 30, 35],
+        "Biographies / Memoirs": [15, 20, 30, 35, 40],
+        "Classics / Historical Reads": [25, 30, 40, 45, 50],
+      },
+      Adults: {
+        "Short Fiction": [10, 15, 20, 25, 30],
+        "Novels": [15, 20, 25, 30, 35],
+        "Long Novels": [18, 22, 28, 35, 40],
+        "Fantasy / Adventure": [20, 25, 30, 35, 40],
+        "Mystery / Thriller": [20, 25, 30, 35, 40],
+        "Science Fiction": [22, 27, 35, 40, 45],
+        "Non-Fiction / Educational Books": [25, 30, 35, 40, 50],
+        "Encyclopedias": [30, 35, 40, 45, 50],
+        "Poetry": [25, 30, 35, 40, 45],
+        "Biographies / Memoirs": [20, 30, 40, 45, 50],
+        "Self-Help": [25, 30, 35, 40, 45],
+        "Classics / Historical / Challenging Reads": [30, 35, 50, 55, 60],
+      }
+    };
+
+    function updateGenres() {
+      const age = document.getElementById("age").value;
+      const genreSelect = document.getElementById("genre");
+      genreSelect.innerHTML = "";
+
+      Object.keys(data[age]).forEach(genre => {
+        const option = document.createElement("option");
+        option.value = genre;
+        option.textContent = genre;
+        genreSelect.appendChild(option);
+      });
+    }
+
+    function getIndexFromPages(pages) {
+      if (pages <= 49) return 0;
+      if (pages <= 99) return 1;
+      if (pages <= 199) return 2;
+      if (pages <= 249) return 3;
+      return 4;
+    }
+
+    function calculateScore() {
+      const age = document.getElementById("age").value;
+      const genre = document.getElementById("genre").value;
+      const pages = parseInt(document.getElementById("pages").value);
+      const scoreDiv = document.getElementById("score");
+
+      if (isNaN(pages) || pages < 0) {
+        scoreDiv.textContent = "Please enter a valid page number.";
+        return;
+      }
+
+      const index = getIndexFromPages(pages);
+      const score = data[age][genre][index];
+
+      scoreDiv.textContent = `✅ Score: ${score} points`;
+    }
+
+    // Initial setup
+    document.getElementById("age").addEventListener("change", updateGenres);
+    updateGenres();
+  </script>
+</body>
+</html>
